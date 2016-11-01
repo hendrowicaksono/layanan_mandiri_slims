@@ -11,9 +11,11 @@ if (isset($_SESSION['flash_messages'])) {
     <form class="uk-form" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
       <fieldset data-uk-margin="">
         <legend><h2 class="uk-h2">Cek Peminjaman Mandiri</h2></legend>
-        <input type="text" placeholder="No Anggota" name="member_id" class="uk-margin-small-top" required>
-        <input type="password" placeholder="Password input" name="member_password" class="uk-margin-small-top" required>
-        <input type="submit" value="Library Member Login" class="uk-button">
+        <input type="text" placeholder="No Anggota" name="member_id" class="uk-margin-small-top uk-form-large" required>
+        <input type="password" placeholder="Password input" name="member_password" class="uk-margin-small-top uk-form-large" required>
+
+        <button class="uk-button uk-button-primary uk-button-large">Library Member Login</button>
+
     </fieldset>
     </form>
   </div>

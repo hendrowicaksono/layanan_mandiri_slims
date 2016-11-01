@@ -7,22 +7,16 @@ if (isset($_SESSION['flash_messages'])) {
 }
 ?>
 
-<div class="uk-grid">
-    <div class="uk-width-1-2">...</div>
-    <div class="uk-width-1-2">...</div>
-</div>
 
-      <div class="uk-grid">
-        <div class="uk-width-1-2">...</div>
-        <div class="uk-width-1-2">
-          ...
-        </div>
-      </div>
+<div class="uk-grid">
+  <div class="uk-width-1-1 uk-text-center uk-block">
+
 
 <form class="uk-form uk-form-horizontal" method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
+<!--
   <div class="uk-grid">
     <div class="uk-width-1-1">
-
+-->
       <div class="uk-grid">
         <div class="uk-width-1-1">
           <h2 class="">Registrasi Anggota</h2>
@@ -30,31 +24,31 @@ if (isset($_SESSION['flash_messages'])) {
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Member name</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Member name
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-male"></i>
-          <input type="text" id="member_name" name="member_name" placeholder="Nama calon anggota perpustakaan" class="uk-form-width-large" required>
+          <input type="text" id="member_name" name="member_name" placeholder="Nama calon anggota perpustakaan" class="uk-form-width-large uk-text-left uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Tanggal lahir</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Tanggal lahir
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-calendar"></i>
-          <input type="text" id="birth_date" name="birth_date" data-uk-datepicker="{format:'DD/MM/YYYY'}" required>
+          <input type="text" id="birth_date" name="birth_date" data-uk-datepicker="{format:'DD/MM/YYYY'}" class=" uk-text-left uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Kategori</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Kategori
         </div>
-        <div class="uk-width-8-10">
-          <select id="member_type_id" name="member_type_id" required>
+        <div class="uk-width-6-10 uk-text-left">
+          <select id="member_type_id" name="member_type_id" class="uk-form-large" required>
           <?php
           foreach ($_membtype as $key => $value) {
           ?>
@@ -67,115 +61,118 @@ if (isset($_SESSION['flash_messages'])) {
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Jenis Kelamin</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Jenis Kelamin
         </div>
-        <div class="uk-width-8-10">
+        <div class="uk-width-6-10 uk-text-left uk-form-large">
           <label><input type="radio" name="gender" value="1"> Laki-laki</label><br />
           <label><input type="radio" name="gender" value="0" checked> Perempuan</label>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Alamat</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Alamat
         </div>
-        <div class="uk-width-8-10">
+        <div class="uk-width-6-10 uk-text-left">
           <textarea id="member_address" name="member_address" cols="70" rows="5" placeholder="Alamat" required></textarea>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Kodepos</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Kodepos
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-calendar"></i>
-          <input type="text" id="postal_code" name="postal_code" placeholder="Kodepos" class="">
+          <input type="text" id="postal_code" name="postal_code" placeholder="Kodepos" class=" uk-form-large">
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Alamat surat menyurat</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Alamat surat menyurat
         </div>
-        <div class="uk-width-8-10">
-          <textarea id="member_mail_address" name="member_mail_address" cols="70" rows="5" placeholder="Alamat surat menyurat" required></textarea>
+        <div class="uk-width-6-10 uk-text-left">
+          <textarea id="member_mail_address" name="member_mail_address" cols="70" rows="5" placeholder="Alamat surat menyurat" class=" uk-form-large" required></textarea>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">No. Telepon</label>
+        <div class="uk-width-4-10 uk-text-right">
+          No. Telepon
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-phone"></i>
-          <input type="text" id="member_phone" name="member_phone" placeholder="Nomor telepon" class="uk-form-width-large" required>
+          <input type="text" id="member_phone" name="member_phone" placeholder="Nomor telepon" class="uk-form-width-large uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Nomor Faksimili</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Nomor Faksimili
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-fax"></i>
-          <input type="text" id="member_fax" name="member_fax" placeholder="Nomor fax" class="uk-form-width-large">
+          <input type="text" id="member_fax" name="member_fax" placeholder="Nomor fax" class="uk-form-width-large uk-form-large">
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Nomor Identitas</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Nomor Identitas
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-sort-numeric-asc"></i>
-          <input type="text" id="pin" name="pin" placeholder="Nomor identitas" class="uk-form-width-large" required>
+          <input type="text" id="pin" name="pin" placeholder="Nomor identitas" class="uk-form-width-large uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Email</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Email
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-envelope-o"></i>
-          <input type="text" id="member_email" name="member_email" placeholder="Alamat email" class="uk-form-width-large" required>
+          <input type="text" id="member_email" name="member_email" placeholder="Alamat email" class="uk-form-width-large uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Password</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Password
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-user-secret"></i>
-          <input type="password" id="mpasswd" name="mpasswd" placeholder="Password" class="uk-form-width-large" required>
+          <input type="password" id="mpasswd" name="mpasswd" placeholder="Password" class="uk-form-width-large uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10 uk-text-right">
-          <label class="uk-form-label">Retype Password</label>
+        <div class="uk-width-4-10 uk-text-right">
+          Retype Password
         </div>
-        <div class="uk-width-8-10 uk-form-icon">
+        <div class="uk-width-6-10 uk-form-icon uk-text-left">
           <i class="uk-icon-user-secret"></i>
-          <input type="password" id="rtmpasswd" name="rtmpasswd" placeholder="Retype Password" class="uk-form-width-large" required>
+          <input type="password" id="rtmpasswd" name="rtmpasswd" placeholder="Retype Password" class="uk-form-width-large uk-form-large" required>
         </div>
       </div>
 
       <div class="uk-grid">
-        <div class="uk-width-2-10">&nbsp;
-        </div>
-        <div class="uk-width-8-10 uk-form-icon">
-          <button type="submit" class="uk-button uk-margin-small-bottom">Kirim Registrasi</button>
+        <div class="uk-width-10-10 uk-form-icon">
+        <button class="uk-button uk-button-primary uk-button-large">Kirim Registrasi</button>
         </div>
       </div>
 
-
+<!--
     </div>
   </div>
+-->
 </form>
+
+</div>
+</div>
+
 <!-- ---------------------------------------------------------- -->
 
 <?php

@@ -2,13 +2,14 @@
 use Respect\Validation\Validator as v;
 global $vars;
 
-print_r($_POST);
-echo '<hr />';
+#debug
+#print_r($_POST);
+#echo '<hr />';
 $member = (object) $_POST;
-print_r($member);
-echo '<hr />';
-echo $member->member_name;
-echo '<hr />';
+#print_r($member);
+#echo '<hr />';
+#echo $member->member_name;
+#echo '<hr />';
 
 $memberValidator = 
   v::attribute('member_name', v::stringType()->length(3,100))
@@ -25,17 +26,21 @@ $memberValidator =
    ->attribute('rtmpasswd', v::stringType())
    ;
 
-
 #$userValidator = v::attribute('name', v::stringType()->length(1,32))
 #                  ->attribute('birth_date', v::date('d/m/Y');
 #$userValidator->validate($user); // true
 
 if ($memberValidator->validate($member)) {
-  echo '_Data valid!';
+  #echo '_Data valid!';
   if ($member->mpasswd === $member->rtmpasswd) {
     $is_member_valid = TRUE;
-    $_mpasswd = md5($member->mpasswd);
+    if ($vars['conf']['version'] === 'cendana') {
+      $_mpasswd = md5($member->mpasswd);
+    } elseif ($vars['conf']['version'] === 'akasia') {
+      $_mpasswd = password_hash($member->mpasswd, PASSWORD_DEFAULT);
+    }
     $_member_id = 'OL-'.mt_rand(10000,999999999999999);
+    $_member_notes = 'Pendaftaran online.';
     $_today = $vars['global']['today'];
     if (isset($member->member_fax)) {
       if (v::phone()->validate($member->member_fax)) {
@@ -56,7 +61,8 @@ if ($memberValidator->validate($member)) {
       member_phone, member_fax, 
       member_since_date, register_date,
       expire_date, is_pending, mpasswd, 
-      input_date, last_update
+      input_date, last_update,
+      member_notes
       ) VALUES (
       \''.$_member_id.'\',
       \''.$member->member_name.'\', \''.$member->gender.'\', \''.$member->birth_date.'\', 
@@ -66,21 +72,23 @@ if ($memberValidator->validate($member)) {
       \''.$member->member_phone.'\', \''.$_member_fax.'\',
       \''.$_today.'\', \''.$_today.'\',
       \''.$_today.'\', \'1\', \''.$_mpasswd.'\',
-      \''.$_today.'\', \''.$_today.'\'
+      \''.$_today.'\', \''.$_today.'\',
+      \''.$_member_notes.'\'
       )
     ';
-    echo '<hr />'.$_sql_insmember;
+    #echo '<hr />'.$_sql_insmember;
     $_stm_insmember = $vars['db']->query($_sql_insmember);
+    $_SESSION['flash_messages'] = 'Data sudah ditambahkan.';
   } else {
     $is_member_valid = FALSE;
     #$_SESSION['flash_messages'] = 'Data password yang diinput belum benar. Silahkan <button type="button" onclick="goBack()" class="uk-button uk-margin-small-bottom">diperbaiki kembali.</button>';
-    $_SESSION['flash_messages'] = 'Data password yang diinput belum benar. Silahkan <a href="#" onclick="goBack()">diperbaiki kembali</a>.';
+    $_SESSION['flash_messages'] = '1. Data password yang diinput belum benar. Silahkan <a href="#" onclick="goBack()">diperbaiki kembali</a>.';
     #echo 'Data password yang diinput belum benar. Silahkan <button onclick="goBack()">diperbaiki</button>';
   }
 
 } else {
   #echo 'Data yang diinput belum benar. Silahkan <button onclick="goBack()">diperbaiki</button>';
-  $_SESSION['flash_messages'] = 'Data yang diinput belum benar. Silahkan <a href="#" onclick="goBack()">diperbaiki lebih lanjut</a>.';
+  $_SESSION['flash_messages'] = '2. Data yang diinput belum benar. Silahkan <a href="#" onclick="goBack()">diperbaiki lebih lanjut</a>.';
 }
 
 ?>

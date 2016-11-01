@@ -7,7 +7,7 @@ if (isset($_SESSION['flash_messages'])) {
   echo '<div class="uk-width-1-1 uk-alert uk-alert-warning uk-text-center">'.$_SESSION['flash_messages'].'</div>';
 }
 ?>
-
+<div class="uk-grid">
   <div class="uk-width-1-1 uk-text-left uk-block">
   <?php if ($_loanlist) { ?>
     <table class="uk-table">
@@ -19,7 +19,7 @@ if (isset($_SESSION['flash_messages'])) {
         <th>Due Date</th>
         <th>Status</th>
         <th>Bisa diperpanjang</th>
-        <th>Debug Info</th>
+        <!--<th>Debug Info</th>-->
       </tr>
       <?php foreach ($_loanlist as $_k => $_v) { ?>
       <tr>
@@ -44,12 +44,12 @@ if (isset($_SESSION['flash_messages'])) {
           echo '<i>Max Loan extend.</i>';
         }
         ?></td>
-        <td>Today: <?php echo $vars['global']['today']; ?> 
+        <!--<td>Today: <?php echo $vars['global']['today']; ?> 
         --- Renewed: <?php echo $_v['renewed']; ?><br />
         --- Loan Periode: <?php echo $_v['loan_periode']; ?><br />
         --- Reborrow Limit: <?php echo $_v['reborrow_limit']; ?><br />
           
-        </td>
+        </td>-->
       </tr>
       <?php } ?>
     </table>
@@ -60,7 +60,7 @@ if (isset($_SESSION['flash_messages'])) {
     </table>
   <?php } ?>
   </div>
-
+</div>
 
 <?php
 unset($_SESSION['flash_messages']);

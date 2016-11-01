@@ -53,6 +53,7 @@ Nanite::get('/projects/([a-zA-Z0-9\-_]+)', function($project){
 });
 
 // Handle a POST request
-Nanite::post('/contact', function(){
-    // Handle submitted contact form.
+Nanite::get('/contact', function(){
+  #  echo "Informasi kontak disini.";
+  include_once BASE_PATH.'/Controllers/layanan_mandiri/get_contact.inc.php';
 });

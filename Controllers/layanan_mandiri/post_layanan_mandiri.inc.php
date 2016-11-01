@@ -1,5 +1,5 @@
 <?php
-
+ini_set('display_errors', '0');
 global $vars;
 
 if (isset($_SESSION['member_id']) AND isset($_SESSION['member_name'])) {
@@ -54,6 +54,10 @@ if (isset($_SESSION['member_id']) AND isset($_SESSION['member_name'])) {
         $_old_dd = $row['due_date'];
         $_loan_periode = $row['loan_periode'];
         $_renewed = $row['renewed'];
+        $_fine_each_day = $row['fine_each_day'];
+        $_member_id = $row['member_id'];
+        $_title = $row['title'];
+        $_item_code = $row['item_code'];
       }
 
       #echo '_old_dd: '.$_old_dd.'--- _loan_periode: '.$_loan_periode.'<hr />';
@@ -81,7 +85,8 @@ if (isset($_SESSION['member_id']) AND isset($_SESSION['member_name'])) {
           
         $i = 0;
       } while ( ($_counter > 0) OR ($_countera > 0) );
-       
+      
+      #echo $_old_dd; die(); 
       #echo $_loan_periode.'<hr />';
       #echo 'Temporary due date: '.$_new_dd.'<hr />';
       $_renewed = $_renewed + 1;
@@ -92,25 +97,69 @@ if (isset($_SESSION['member_id']) AND isset($_SESSION['member_name'])) {
       $_SESSION['flash_messages'] = 'Peminjaman koleksi berhasil diperpanjang.';
       $_SESSION['flash_messages_id'] = $_POST['loan_id'];
 
+      if ($vars['global']['today'] > $_old_dd) {
+        $_uts_duedate = DateTime::createFromFormat('Y-m-d', $_old_dd);
+        $uts_duedate = (int) $_uts_duedate->format('U');
+        $_uts_today = DateTime::createFromFormat('Y-m-d', $vars['global']['today']);
+        $uts_today = (int) $_uts_today->format('U');
+        $late_days = ($uts_today - $uts_duedate) / 86400;
+        $total_fines = $late_days * $_fine_each_day;
+        $_sql_fines = 'INSERT INTO fines VALUES (NULL, \''.$vars['global']['today'].'\', \''.$_member_id.'\', \''.$total_fines.'\', \'0\', \'Overdue fines for item '.$_item_code.'\')';
+        #echo $_sql_fines; die();
+        $_stmt_fines = $vars['db']->query($_sql_fines);
+
+      }
+
+
+
+
 
     }
+
+
+
+
+
+
+
 
   }
 } else {
   $_POST['member_id'] = trim($_POST['member_id']);
   $_POST['member_password'] = trim($_POST['member_password']);
-  $_password = md5($_POST['member_password']);
-  $_sql = 'SELECT * FROM member WHERE member_id=\''.$_POST['member_id'].'\' AND mpasswd=\''.$_password.'\'';
-  $stmt = $vars['db']->query($_sql);
-  $_member_count = $stmt->rowCount();
-  if ($_member_count === 1) {
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $_SESSION['member_id'] = $row['member_id'];
-      $_SESSION['member_name'] = $row['member_name'];
+
+  if ($vars['conf']['version'] === 'cendana') {
+    $_password = md5($_POST['member_password']);
+    $_sql = 'SELECT * FROM member WHERE member_id=\''.$_POST['member_id'].'\' AND mpasswd=\''.$_password.'\'';
+    $stmt = $vars['db']->query($_sql);
+    $_member_count = $stmt->rowCount();
+    if ($_member_count === 1) {
+      while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $_SESSION['member_id'] = $row['member_id'];
+        $_SESSION['member_name'] = $row['member_name'];
+      }
+    } else {
+      $_SESSION['flash_messages'] = 'Username atau password salah!';
+      header("location:layanan_mandiri");
     }
-  } else {
-    $_SESSION['flash_messages'] = 'Username dan password salah!';
-    header("location:layanan_mandiri");
+  } elseif ($vars['conf']['version'] === 'akasia') {
+    $_sql = 'SELECT * FROM member WHERE member_id=\''.$_POST['member_id'].'\'';
+    $stmt = $vars['db']->query($_sql);
+    $_member_count = $stmt->rowCount();
+    if ($_member_count === 1) {
+      while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        if (password_verify($_POST['member_password'], $row['mpasswd'])) {
+          $_SESSION['member_id'] = $row['member_id'];
+          $_SESSION['member_name'] = $row['member_name'];
+        } else {
+          $_SESSION['flash_messages'] = '1. Username atau password salah!';
+          header("location:layanan_mandiri");
+        }
+      }
+    } else {
+      $_SESSION['flash_messages'] = '2. Username atau password salah!';
+      header("location:layanan_mandiri");
+    }
   }
 }
 
@@ -135,11 +184,16 @@ if (isset($_SESSION['member_id']) AND isset($_SESSION['member_name'])) {
       $_loanlist[$_c]['item_code'] = $row['item_code'];
       $_loanlist[$_c]['title'] = $row['title'];
       $_loanlist[$_c]['loan_date'] = $row['loan_date'];
-      $_loanlist[$_c]['loan_id'] = $row['loan_id'];
+      #$_loanlist[$_c]['loan_id'] = $row['loan_id'];
       $_loanlist[$_c]['due_date'] = $row['due_date'];
       #$_loanlist[$_c]['today'] = $_today;
       if ($vars['global']['today'] > $_loanlist[$_c]['due_date']) {
-        $_loanlist[$_c]['status'] = 'Terlambat';
+        $_uts_duedate = DateTime::createFromFormat('Y-m-d', $row['due_date']);
+        $uts_duedate = (int) $_uts_duedate->format('U');
+        $_uts_today = DateTime::createFromFormat('Y-m-d', $vars['global']['today']);
+        $uts_today = (int) $_uts_today->format('U');
+        $late_days = ($uts_today - $uts_duedate) / 86400;
+        $_loanlist[$_c]['status'] = 'Terlambat selama: '.$late_days.' hari.';
       } else {
         $_loanlist[$_c]['status'] = 'Tidak terlambat';
       }
@@ -164,9 +218,13 @@ if (isset($_SESSION['member_id']) AND isset($_SESSION['member_name'])) {
       $_stmt_getrules = $vars['db']->query($_sql_getrules);
       $_count_getrules = $_stmt_getrules->rowCount();#echo $_count_getrules;
       if ($_count_getrules > 0) {
+        $_loan_id = $row['loan_id'];
+        $_SESSION[$_loan_id]['fine_each_day'] = false;
         while($row_getrules = $_stmt_getrules->fetch(PDO::FETCH_ASSOC)) {
           $_loanlist[$_c]['loan_periode'] = $row_getrules['loan_periode'];#echo 'neh: '.$row_getrules['loan_periode'];
           $_loanlist[$_c]['reborrow_limit'] = $row_getrules['reborrow_limit'];
+          $_loanlist[$_c]['fine_each_day'] = $row_getrules['fine_each_day'];
+          $_SESSION[$_loan_id]['fine_each_day'] = $row_getrules['fine_each_day'];
         }
       }
 
